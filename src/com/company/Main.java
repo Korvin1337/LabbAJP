@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,9 +11,9 @@ import java.util.regex.Pattern;
 class PrimeChecker implements Runnable {
     int start;
     int end;
-    ArrayList<Integer> primes;
+    List<Integer> primes;
 
-    public PrimeChecker(int start, int end, ArrayList<Integer> primes) {
+    public PrimeChecker(int start, int end, List<Integer> primes) {
         this.start = start;
         this.end = end;
         this.primes = primes;
@@ -75,13 +76,12 @@ public class Main {
         );
 
         // 1.2 Highest salary
-        System.out.println(
-                employees
+                List<Person> employeeStream = employees
                         .stream()
                         .sorted(Comparator.comparing(Person::getSalary).reversed())
-                        .limit(1)
-                        .toList()
-        );
+                        /*.limit(1)*/
+                        .toList();
+        System.out.println(employeeStream);
 
         // 1.3 Lowest salary
         System.out.println(
@@ -117,7 +117,7 @@ public class Main {
 
 
         // 4.0
-        ArrayList<Integer> primes = new ArrayList<Integer>();
+        List<Integer> primes = Collections.synchronizedList(new ArrayList<Integer>());
 
         Thread thread1 = new Thread(new PrimeChecker(0, 125000, primes));
         Thread thread2 = new Thread(new PrimeChecker(125001, 250000, primes));
@@ -125,12 +125,12 @@ public class Main {
         Thread thread4 = new Thread(new PrimeChecker(375001, 500000, primes));
 
         thread1.start();
-        thread1.join();
         thread2.start();
-        thread2.join();
         thread3.start();
-        thread3.join();
         thread4.start();
+        thread1.join();
+        thread2.join();
+        thread3.join();
         thread4.join();
 
         /*System.out.println(primes);*/
